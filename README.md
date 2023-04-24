@@ -2,7 +2,7 @@
 
 # Simple python program for backup, works for windows.
 
-### This tool depends on a log file that will contain the last backup date, and there is a limit variables, if the date in the log file equals or was bigger than the limit, it will start the backup.
+### This tool depends on a log file that will contain the last backup date, and there is a limit variable, if the date in the log file equals or was bigger than the limit ( numbers of days you choose to backup again ), it will start the backup.
 
 
 
