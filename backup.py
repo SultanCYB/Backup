@@ -112,7 +112,7 @@ def file_operations(operation):
     elif operation == 'w':
 
         try:
-            with open(log_file_path, 'w') as file:
+            with open(log_file_path, operation) as file:
                 file.write(str(current))  # writting the new date to the log file
 
                 # converting current to str because it is still a delta object
