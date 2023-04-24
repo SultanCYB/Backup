@@ -8,7 +8,7 @@
 
 ## Steps -
 
-### 1- Download the code and the `log file`.
+### 1- Download the code and the `log file` and pip install the modules in requirements.txt .
 ### 2- enter the required information in the code file such as paths and data to ignore and other...
 ### 3- run the program.
 
