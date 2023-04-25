@@ -19,9 +19,17 @@
 
 ### You mustn't edit the `log file` contents to keep the program running normally
 
+### I'm not responsible for any data loss.
+
+### You don't need to edit the log file or doing anything to it, just download the one attached with the code; down is only additional info.
+
 ### The date in `log file` must be in this format :
 
  `YYYY-MM-DD`
+
+### example :
+
+ `2023-04-17`
 
 ### `log file` name :
 
@@ -30,6 +38,4 @@
 ### `log file` path :
 
 `Your choice`
-
-### I'm not responsible for any data loss.
 
