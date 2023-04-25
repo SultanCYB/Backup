@@ -2,7 +2,7 @@
 
 # Simple python program for backup, works for windows.
 
-### This is a simple tool that backup your files anywhere you want in your drive or on your USB drive, it simply take a copy of the files and folders and paste it on the path you choose.
+### This is a simple tool that backup your files anywhere you want in your drive or on your USB drive, it simply take a copy of the files and folders in the `path you choose` and paste it on `the path you choose.`
 
 ### The tool depends on a `log file` that will contain the last backup date, and there is a `limit` variable, if the date in the `log file` equals or was bigger than the `limit` ( numbers of days you choose to start the backup again ), it will start the backup.
 
