@@ -130,8 +130,11 @@ def file_operations(operation):
 
 # --------------------------------------------------------------------
 
-paths_src = Path(data_you_want_to_backup)  # The path you want to backup, You must deteremine it
+paths_src = [the_paths_you_want_to_backup_in_a_list] # The paths you want to backup, You must deteremine them
 
+# It must be in a list even if it was one path
+
+paths_src = list(map(Path, paths_src)) # Converting the paths from string object to Path object, then convert the map object to a list object
 
 path_dest = Path(destination_of_backup)  # The destination of the backup, You must deteremine it
 
