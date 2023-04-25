@@ -19,7 +19,7 @@
 
 ### You mustn't edit the `log file` contents to keep the program running normally
 
-### `log file` format :
+### The date in `log file` must be in this format :
 
  `YYYY-MM-DD`
 
