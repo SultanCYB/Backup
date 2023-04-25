@@ -6,7 +6,6 @@ import shutil  # for copying the files and folders to the backup path
 import sys  # for exiting after error or the backup is done
 
 from pathlib import Path  # makes working with paths easier
-from os import listdir  # makes working with paths easier
 
 from datetime import date  # to decide if it's time to backu[]
 from plyer import notification  # for sending alerts regarding errors or info about backup
