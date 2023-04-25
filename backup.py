@@ -7,7 +7,7 @@ import sys  # for exiting after error or the backup is done
 
 from pathlib import Path  # makes working with paths easier
 
-from datetime import date  # to decide if it's time to backu[]
+from datetime import date  # to decide if it's time to backup
 from plyer import notification  # for sending alerts regarding errors or info about backup
 
 #########################################################
