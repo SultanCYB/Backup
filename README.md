@@ -23,7 +23,9 @@
 
 ### I'm not responsible for any data loss.
 
-### You don't need to edit the log file or doing anything to it, just download the one attached with the code; down is only additional info.
+### You don't need to edit the log file or do anything to it, just download the one attached with the code.
+
+## additional info.
 
 ### The date in `log file` must be in this format :
 
