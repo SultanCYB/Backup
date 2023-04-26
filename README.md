@@ -6,7 +6,7 @@
 
 ### The tool depends on a `log file` that will contain the last backup date, and there is a `limit` variable, if the date in the `log file` equals or was bigger than the `limit` ( numbers of days you choose to start the backup again ), it will start the backup.
 
-### You can let the tool ignore folders and files you don't want to backup that is in in the same path of the data getting copied
+### You can let the tool ignore folders and files you don't want to backup that is in in the same path of the data you're backing up
 
 ## Steps -
 
