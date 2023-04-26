@@ -17,9 +17,9 @@
 
 ## Important -
 
-### The only thing left is to find your own way to let this program runs whenever you turn on your pc and whenever it pass or equals the `limit` (which in days and you can edit it in the code) it will start the backup
+### The only thing left is to find your own way to let this program runs whenever you turn on your pc ( automating the script )
 
-### You mustn't edit the `log file` contents to keep the program running normally
+### You mustn't edit the `log file` contents to prevent errors.
 
 ### I'm not responsible for any data loss.
 
