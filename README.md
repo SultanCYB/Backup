@@ -31,8 +31,10 @@
 
 ## Steps -
 
-### 1- Download the code and the `log file` and pip install the modules in requirements.txt .
-### 2- enter the required information in the code file such as paths and -data to ignore- and other...
+### 1- Download the code and the `backup log file` and pip install the modules in requirements.txt .
+
+### 2- Change the editable variables according to your desires
+
 ### 3- run the program.
 
 
