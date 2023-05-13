@@ -4,11 +4,13 @@
 
 ### This tool can backup your files to anywhere you want, whether to your drive or your USB drive, it simply archive the files you chose as a `tar` archive to the path you specify.
 
-### The tool is designed that it runs after a certain number of days with the help of two things, however you need to find a way to let it run automatiaclly every day to check if it passed that certain number
+### The tool is designed that it runs after a certain number of days with the help of two things :
 
 ### 1- the `re_update` variable ( default is 7 ) this variable is the certain number of days; the count starts since the written date in the `update log file` which will be disussed after this line.
 
 ### 2- the `update log file` which will contain the last successful backup's date. 
+
+### However, you need to find a way to let it run automatiaclly every day to check if it passed the `re_update` number
 
 ## Editable variables -
 
