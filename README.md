@@ -1,12 +1,29 @@
 # Backup
 
-# Simple python program for backup, works for windows.
+#  Python tool that backup your files
 
-### This is a simple tool that backup your files anywhere you want in your drive or on your USB drive, it simply take a copy of the files and folders in the `path you choose` and paste it on `the path you choose.`
+### This tool can backup your files to anywhere you want, whether to your drive or your USB drive, it simply archive the files you chose as a `tar` archive to the path you specify.
 
-### The tool depends on a `log file` that will contain the last backup date, and there is a `limit` variable, if the date in the `log file` equals or was bigger than the `limit` ( numbers of days you choose to start the backup again ), it will start the backup.
+### The tool is designed that it automatically runs after a certain number of days with the help of two things,
 
-### You can let the tool ignore folders and files you don't want to backup that is in in the same path of the data you're backing up
+### 1- the `re_update` variable ( default is 7 ) this variable is the certain number of days; the count starts since the written date in the `update log file` which will be disussed after this line.
+
+### 2- the `update log file` which will contain the last successful backup's date. 
+
+## Editable variables -
+
+### `archive_path` ( Optional ) [ Default is the current path ] : is the destination path of the resulted archive
+
+### `overwrite` ( Optional ) [ Default is False ] : is the option of overwritting an existing archive that have the same name of the result archice
+
+### `file_sources` ( Optional ) [ Default is the current path ] : is a list of paths that you want to back up
+
+### `update_path` ( Optional )  [ Default is the current path ] : is the path of the `update log file`
+
+### `error_path` ( Optional )  [ Default is the current path ] : is the path of the `error log file`
+
+### `ignore_path` ( Optional ) [ Default is empty list ] : is a list of paths of files or folders that you don't want to include in the backup process
+
 
 ## Steps -
 
@@ -15,15 +32,17 @@
 ### 3- run the program.
 
 
-## Important -
+## Important notes -
 
-### The only thing left is to find your own way to let this program runs whenever you turn on your pc ( automating the script )
+### to overwrite that existing archive with the result archice, you need to pass True to the `overwrite` variable.
 
-### You mustn't edit the `log file` contents to prevent errors.
+> **The data that will be overwritten will be deleted permanently.**
+
+### The only thing left is to find your own way to let this program execute whenever you turn on your pc ( automating the script )
+
+### You mustn't edit the `update log file` contents to prevent errors.
 
 ### I'm not responsible for any data loss.
-
-### You don't need to edit the log file or do anything to it, just download the one attached with the code.
 
 ## additional info.
 
@@ -34,12 +53,3 @@
 ### example :
 
  `2023-04-17`
-
-### `log file` name :
-
-`Your choice, a .txt file, or a .log file`
-
-### `log file` path :
-
-`Your choice`
-
