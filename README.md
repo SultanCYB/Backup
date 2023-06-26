@@ -6,27 +6,27 @@
 
 ### The tool is designed that it runs after a certain number of days with the help of two things :
 
-#### 1- the `re_backup` variable ( default is 7 ) this variable is the certain number of days; the count starts since the written date in the `backup log` file which will be disussed after this line.
+#### 1- the `re_backup` variable ( default is 3 ) this variable is the certain number of days; the count starts since the written date in the `backup.log` file.
 
-#### 2- the `backup log` file which will contain the last successful backup's date. 
+#### 2- the `backup.log` file which will contain the last successful backup's date. 
 
-### However, you need to find a way to let it run automatiaclly every day to check if it passed the `re_backup` number
+### However, you need to find your own way to let it run automatically every day to check if it passed the `re_backup` number
 
 ## Editable variables -
 
+#### `file_sources` ( Optional ) [ default : the directory of this code file ] : is the list of paths you want to back up
+
+#### `overwrite` ( Optional ) [ default is False ] : is the option of overwritting an existing archive that have the same name of the result archice
+
 #### `archive_path` ( Optional ) [ default : the directory of this code file ] : is the destination path of the resulted archive
-
-#### `overwrite` ( Optional ) [ Default is False ] : is the option of overwritting an existing archive that have the same name of the result archice
-
-#### `file_sources` ( Optional ) [ default : the directory of this code file ] : is a list of paths that you want to back up
 
 #### `log_path` ( Optional )  [ default : the directory of this code file ] : is the path of the `backup log` file
 
 #### `error_path` ( Optional )  [ default : the directory of this code file ] : is the path of the `error log` file
 
-#### `re_backup` ( Optional ) [ Default is 7 days ] : Is the certain number of days to backup again
-
 #### `ignore_path` ( Optional ) [ Default is empty list ] : is a list of paths of files or folders that you don't want to include in the backup process
+
+#### `re_backup` ( Optional ) [ Default is 7 days ] : Is the certain number of days to backup again
 
 
 ## Steps -
@@ -40,7 +40,7 @@
 
 ## Important notes -
 
-#### to overwrite that existing archive with the result archice, you need to pass True to the `overwrite` variable.
+#### to overwrite an existing old archive with the new one, you need to pass True to the `overwrite` variable.
 
 > **The data that will be overwritten will be deleted permanently.**
 
