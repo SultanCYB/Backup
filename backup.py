@@ -1,172 +1,305 @@
 #!/usr/bin/env python3
 '''
-Simple program for backup
+Python tool for regular backup
 '''
+
+# for files and paths
 import shutil  # for copying the files and folders to the backup path
-import sys  # for exiting after error or the backup is done
+import os  # makes working with paths easier
+import tarfile  # archiving the files
+import re  # regex to get the current file path
+from typing import List  # for annotations
+from io import BytesIO
 
-from pathlib import Path  # makes working with paths easier
-
+# for date and notifications
 from datetime import date  # to decide if it's time to backup
-from plyer import notification  # for sending alerts regarding errors or info about backup
+from plyer import notification  # for sending alerts regarding errors or info
 
-#########################################################
-# variables declartions and more at the end of the file #
-#########################################################
+# for errors and else
+import sys  # for exiting the program, and to get information of errors
+import time  # for working with the error time and get the time the program needed to execute
 
-
-def alerts(number):
-    '''Alert function that sending notifications to your PC 
-    concerning what happens while the program is running
-
-    Ref codes manual :
-      [-1] log file reading error
-      [0] backup error
-      [0.5] log file writing error
-      [1] start backup
-      [2] backup done'''
-
-    if number == -1:
-        return notification.notify("Backup", f"Log file reading error\nError : {number}", "Backup")
-
-    elif number == 0:
-        return notification.notify(
-            "Backup", f"Error occured couldn't backup\nError : {number}", "Backup"
-        )
-
-    elif number == 0.5:
-        return notification.notify("Backup", f"Log file writting error\nError : {number}", "Backup")
-
-    elif number == 1:
-
-        return notification.notify(
-            "Backup", f"Backing up..\nlast backup : {days_diff} days ago", "Backup"
-        )
-
-    elif number == 2:
-        return notification.notify("Backup", "Backup done", "Backup")
+##################################################################
+                #### Check the end of the file ####
+##################################################################
 
 
-def to_ignore(path, names):
-    '''Function that returns a list of folders and files you don't want to backup
-    You need this function if there are files and folders in the path you want to backup, that you don't 
-    want to backup them.
-
-    If you don't then just keep it as it is'''
-
-    folders = []
-
-    return folders
-
-
-def backup():
+def Error_log(error_name, error_time) -> None:
+    ''' function to log errors to the error log file '''
 
     try:
-        alerts(1)  # Starting the backup process
+        with open(error_path, 'a') as file:
 
-        for i in paths_src:
+            file.write(f'[ERROR] [{error_time}] -->  {error_name}\n\n')
 
-            shutil.copytree(src=i, dst=path_dest, ignore=to_ignore, dirs_exist_ok=True)
+            file.write(f'Error type : {type(error_name).__name__}\n')
+            file.write(f'Line : {(sys.exc_info()[2]).tb_lineno}\n')
 
-        else:
-            file_operations('w')
-            # calling the function to start writing the new date because the backup is done
+            file.write(f'For additional help, you can contact me at : sultanxx575@gmail.com\n')
 
-    except:
-        alerts(0)  # sending an alert regarding that there is a backup error
+            file.write(f"{'-'*65}\n")
+
+    except Exception as e:
+        error_time_2 = time.strftime("%Y-%m-%d %H:%M", time.localtime())  # the time of the error
+        print(
+            f"""The program was trying to write an error to the error log but it seems that another
+error appeared in the error log function, so this process has failed. These are the errors :
+
+
+-    error information of the error that faced the error log function are:      
+
+    error name : {e}
+    error time : {error_time_2}
+    error line : {(sys.exc_info()[2]).tb_lineno}
+    error type : {type(e).__name__}
+
+-    error information for the second error that happend in somewhere that isn't in the error log function are:
+
+    error name : {error_name}
+    error time : {error_time}
+    error type : {type(error_name).__name__}
+
+
+    if you keep getting the same problem contact me at
+
+    sultanxx575@gmail.com"""
+        )
+
         sys.exit()
 
 
-def file_operations(operation):
-    ''' file operations function that read from and write to the log file'''
+def Alerts(number, days_diff=None, finish=None) -> None:
+    '''Alert function that send notifications to your PC 
+    concerning the current status of the program, success, error
+    '''
+    try:
 
-    global days_diff  # globaling this variable so we can use it in the alerts function
+        # error
+        if number == -1:
+            notification.notify("Backup", "There is an error, Check the error log file", "Backup")
 
-    if operation == 'r':  # if it was a read operation
+        # status
+        elif number == 1:
+            notification.notify(
+                "Backup", f"Backing up..\nlast backup : {days_diff} days ago", "Backup"
+            )
 
-        try:
-            with open(log_file_path, operation) as file:
-                file = file.read().split("-")
+        # success
+        elif number == 2:
+            notification.notify("Backup", f"Backup done in {finish} seconds", "Backup")
 
-                file = list(map(int, file))  # converting the year, month, day to int
+    except Exception as e:
+        error_time = time.strftime("%Y-%m-%d %H:%M", time.localtime())  # the time of the error
 
-                year, month, day = file[0], file[1], file[2]
+        Error_log(e, error_time)  # calling the error log function to write to the error log
 
-                last_date = date(year, month, day)  # converting it to delta object
+        if finish:
+            print(
+                "The backup is done. However, the alert function doesn't work for some reason.. Check the error log"
+            )
+        else:
+            print(
+                "The backup has failed. and the alert function doesn't work for some reason.. Check the error log"
+            )
 
-                days_diff = (current - last_date).days  # getting the days difference
+        sys.exit()
 
-                if days_diff >= limit:  # comparing if the difference equal to or bigger than the limit
-                    return backup()
+
+def Backup(archive_path):
+    ''' The backup function '''
+    global finish
+    try:
+        # checking that the path exists.
+        if not os.path.exists(archive_path):
+            raise IOError("archive directory doesn't exist")
+
+        # Starting the backup process
+
+        archive_path += "backup.tar"
+
+        if not overwrite and os.path.isfile(archive_path):
+
+            i = 1
+
+            archive_path = re.sub(r"\.tar$", "", archive_path, re.IGNORECASE)
+
+            # to also prevent overwritting any other duplicated archives
+            while os.path.isfile(f"{archive_path}_{i}.tar"):
+                i += 1
+
+            archive_path += f"_{i}.tar"
+
+        with tarfile.open(archive_path, 'w') as my_archive:
+
+            for src in file_sources:  # loop into the given file sources
+
+                if os.path.isfile(src):  # if the given path is a path for a file
+                    # to add file sources that has only one file in it is path
+                    my_archive.add(src, os.path.basename(src))
 
                 else:
-                    sys.exit()
 
-        except:
+                    for root, dirs, files in os.walk(src):
 
-            alerts(-1)  # there was a log file reading error
+                        # checking if the ignored files or folders are in the given path
+                        for ignored in ignore_path:
+                            if ignored in dirs or ignored in root:
+                                break
 
-            sys.exit()
+                        # the else here means : if the loop ended without any break
+                        else:
+                            # looping into the files of the current directory
+                            for file in files:
 
-    elif operation == 'w':
+                                # joining the path and the file to get the desired file
+                                file_path = os.path.join(root, file)
+                                my_archive.add(file_path)
+
+            # simple text file contain date of the backup
+
+            # date, hours, minutes, seconds
+            exact_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+
+            # creating a stream for bytes
+            fake_file = BytesIO()
+
+            # writting the content of the file
+            fake_file.write(f"The backup ended successfuly at {exact_time}".encode())
+
+            # the name of the file
+            tar_info = tarfile.TarInfo(name=f"Backup date {exact_time}.txt")
+
+            # getting the size of the file
+            tar_info.size = fake_file.tell()
+
+            fake_file.seek(0)  # moving the cursor to 0 byte, to read the file again
+
+            my_archive.addfile(
+                fileobj=fake_file, tarinfo=tar_info
+            )  # adding the file to the archive
+
+        # calling the func to start writing the new date after the backup is done
+        finish = round(time.time() - start, 2)
+
+        return 1
+
+    except Exception as e:
+        error_time = time.strftime("%Y-%m-%d %H:%M", time.localtime())  # the time of the error
+
+        Error_log(e, error_time)  # calling the error log function to write to the error log
+        Alerts(-1)  # there was an error, so alert will be sent
+        sys.exit()
+
+
+def Log_Backup(operation):
+    ''' backup log operations function that read from and log to the backup log file'''
+
+    if operation == 'r':  # if it was a read file operation
 
         try:
-            with open(log_file_path, operation) as file:
-                file.write(str(current))  # writting the new date to the log file
+            with open(log_path, operation) as file:
+                file = file.read().split("-")
 
-                # converting current to str because it is still a delta object
+                year, month, day = int(file[0]), int(file[1]), int(file[2])
+                '''converting the date of the last backup it to delta object, 
+                so we can substract it from the current date'''
+                last_backup = date(year, month, day)
 
-            alerts(2)  # sending an alert regarding that the backup is done
+                days_diff = (current_date - last_backup).days  # getting the days difference
 
-        except:
-            alerts(0.5)  # sending an alert regarding that there is a log file error
-            sys.exit()
+                # if the the difference was bigger than the re_backup value, the backp will start
+                if days_diff >= re_backup:
+                    # sending alert informing the start of the backup & last backup in days
+                    Alerts(1, days_diff)
+                    return 1
+
+                else:
+                    return sys.exit()
+
+        except Exception as e:
+
+            error_time = time.strftime("%Y-%m-%d %H:%M", time.localtime())  # the time of the error
+
+            Error_log(e, error_time)  # calling the error log function to write to the error log
+            Alerts(-1)  # there was an error, so alert will be sent
+            sys.exit()  # exiting the program
+
+    elif operation == 'w':  # if it was a file write operation
+
+        try:
+
+            with open(log_path, operation) as file:
+                file.write(str(current_date))  # writting the new date to the log file
+
+            Alerts(2, finish=finish)  # sending an alert regarding that the backup is done
+
+            return 1
+
+        except Exception as e:
+            error_time = time.strftime("%Y-%m-%d %H:%M", time.localtime())  # the time of the error
+
+            Error_log(e, error_time)  # calling the error log function to write to the error log
+            Alerts(-1)  # there was an error, so alert will be sent
+            sys.exit()  # exiting the program
 
 
-# Global variables :
+def main():
+    ''' Simple main function that is responsible for calling functions'''
 
-# Things you can change
+    if os.path.exists(log_path):  # if the backup log already exists then read it
+        Log_Backup('r')
 
-# --------------------------------------------------------------------
+    Backup(archive_path)
+    Log_Backup('w')
 
-paths_src = [the_paths_you_want_to_backup_in_a_list] # The paths you want to backup, You must deteremine them
 
-# It must be in a list even if it was one path
+#------------------------------------------------------------------------------------------------
 
-paths_src = list(map(Path, paths_src)) # Converting the paths from string object to Path object, then convert the map object to a list object
+##### VARIABLES YOU MUST NOT CHANGE #####
 
-path_dest = Path(destination_of_backup)  # The destination of the backup, You must deteremine it
+# this will get directory path of this file
+current_folder: str = re.search(r'(.+\\).+$', __file__)[1]
 
-log_file_path = Path(the_path_of_the_log_file)  # log file path, You must deteremine it
+current_date = date.today()  # Getting today's date
+start: "time in seconds" = time.time()  # program execution start time
+finish: "time in seconds" = None  # program execution end time
 
-limit = 7  # The default days to backup again is 7, You can change it
+#------------------------------------------------------------------------------------------------
 
-#-------------------------------------------------------------------------------
+##### Variables you can change #####
 
-# Things you mustn't change
+# Optional [ default : the directory of this code file ] : is the list of paths you want to back up
+file_sources: List[str] = [current_folder]
 
-# --------------------------------------------------------------------
+# Optional  [ default : is False ] : is the option of overwritting an existing archive that have the same name of the result archice
+overwrite: bool = False
 
-current = date.today()  # Getting today date
+# Optional [ default : the directory of this code file ] : The destination of the backup process
+archive_path: str = current_folder
+
+# Optional [ default : the directory of this code file ] : the backup log file path,
+log_path: str = f"{current_folder}backup.log"
+
+# Optional [ default : the directory of this code file ] : the error log file path
+error_path: str = f"{current_folder}error.log"
+
+# Optional [ default : empty list [] ] : is a list of paths of files or folders that you don't want to include in the backup process
+ignore_path: List[None] = []
+
+# Optional [ default : 7 ] : is the certain number of days to backup again
+re_backup: int = 7
+
+#------------------------------------------------------------------------------------------------
 
 # Program start
 
-file_operations('r')  # Calling the function to read the log file
-
-# --------------------------------------------------------------------
+if __name__ == '__main__':
+    main()
 ''' 
 
-Log file format :
+the backup log file format :
 
  YYYY-MM-DD
-
-Log file name :
-
- Your choice, a .txt file, or a .log file
-
-Log file path :
-
- Your choice
 
 You mustn't edit the file contents or name to keep the program running normally
 
