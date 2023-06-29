@@ -10,7 +10,7 @@
 
 #### 2- the `backup.log` file which will contain the last successful backup's date. 
 
-### However, you need to find your own way to let it run automatically every day to check if it passed the `re_backup` number
+### However, you need to find your own way to let it run automatically every day to check if it reached or was greater than the `re_backup` number
 
 ## Editable variables -
 
