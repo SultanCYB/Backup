@@ -1,8 +1,8 @@
-# Backup
-
 #  Python tool that backup your files
 
 ### This tool can backup your files to anywhere you want, whether to your drive or your USB drive, it simply archive the files with the `tar` format __(= without compress)__ to the path you specify.
+
+### When you start the program a backup log file contains the current date will be automatically created, then the backup will start. 
 
 ### The tool is designed that it runs after a certain number of days with the help of two things :
 
