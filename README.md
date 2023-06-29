@@ -50,8 +50,6 @@
 
 #### I'm not responsible for any data loss.
 
-## additional info.
-
 #### The date in `log file` must be in this format :
 
  `YYYY-MM-DD`
