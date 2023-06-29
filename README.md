@@ -24,9 +24,9 @@
 
 #### `error_path` ( Optional )  [ default : the directory of this code file ] : is the path of the `error log` file
 
-#### `ignore_path` ( Optional ) [ Default is empty list ] : is a list of paths of files or folders that you don't want to include in the backup process
+#### `ignore_path` ( Optional ) [ default is empty list ] : is a list of paths of files or folders that you don't want to include in the backup process
 
-#### `re_backup` ( Optional ) [ Default is 7 days ] : Is the certain number of days to backup again
+#### `re_backup` ( Optional ) [ default is 3 days ] : Is the certain number of days to backup again
 
 
 ## Steps -
