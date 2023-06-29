@@ -31,7 +31,7 @@
 
 ## Steps -
 
-#### 1- Download the code and the `backup log file` and pip install the modules in requirements.txt .
+#### 1- Download the code and pip install the modules in requirements.txt .
 
 #### 2- Change the editable variables according to your desires
 
