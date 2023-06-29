@@ -50,7 +50,7 @@
 
 #### I'm not responsible for any data loss.
 
-#### The date in `log file` must be in this format :
+#### The date in `backup log file` must be in this format :
 
  `YYYY-MM-DD`
 
